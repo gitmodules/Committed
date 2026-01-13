@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Git Commit Generator - A tool to generate multiple empty commits with progress tracking.
-"""
 import argparse
 import subprocess
 import sys
@@ -11,7 +8,6 @@ from typing import Optional, Tuple
 
 @dataclass
 class CommitConfig:
-    """Configuration for git commit generation."""
     count: int
     auto_push: bool
     message_prefix: str = "Commit"
@@ -19,7 +15,6 @@ class CommitConfig:
     dry_run: bool = False
 
 def run_command(command: str, capture_output: bool = False) -> Tuple[bool, str]:
-    """Execute a shell command and return the result."""
     try:
         result = subprocess.run(
             command,
@@ -34,7 +29,6 @@ def run_command(command: str, capture_output: bool = False) -> Tuple[bool, str]:
         return False, e.stderr if capture_output else str(e)
 
 def get_current_branch() -> str:
-    """Get the current git branch name."""
     success, output = run_command("git rev-parse --abbrev-ref HEAD", capture_output=True)
     if not success:
         print("Error: Not a git repository or no commits yet.")
@@ -42,7 +36,6 @@ def get_current_branch() -> str:
     return output.strip()
 
 def make_commit(commit_number: int, total_commits: int, config: CommitConfig) -> bool:
-    """Create a single commit with the given configuration."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message = f"{config.message_prefix} {commit_number + 1} of {total_commits} at {timestamp}"
     
@@ -54,7 +47,6 @@ def make_commit(commit_number: int, total_commits: int, config: CommitConfig) ->
     return success
 
 def main():
-    """Main function to handle command-line arguments and execute the commit process."""
     parser = argparse.ArgumentParser(description='Generate multiple git commits.')
     parser.add_argument('count', type=int, help='Number of commits to generate')
     parser.add_argument('--push', '-p', action='store_true', help='Auto push after commits')
